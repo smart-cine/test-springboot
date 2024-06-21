@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## About Application
 Project is Cinema Management. The main feature is ordering seat feature with realtime. And System structure of its is micro-service( all services refer to one database). My team use Java just for API. And will use Nodejs for runtime.
 
@@ -23,3 +24,6 @@ https://api.postman.com/collections/34158645-eec5e262-7214-47e1-8891-3fe81f196a5
 
 ## Progress
 In progress 
+=======
+# smartcine-be
+>>>>>>> Initial commit
