@@ -14,7 +14,6 @@ public class PerformMapper {
         typeMap.addMappings(mapper -> {
             mapper.map(Perform::getCinemaRoom, PerformDTO::setCinemaRoomDTO);
             mapper.map(Perform::getFilm, PerformDTO::setFilmDTO);
-            mapper.map(Perform::getViewType, PerformDTO::setViewTypeDTO);
             mapper.map(Perform::getTranslateType, PerformDTO::setTranslateTypeDTO);
         });
 
@@ -28,8 +27,8 @@ public class PerformMapper {
         performDTO.getCinemaRoomDTO().setCinemaLayoutDTO(
                 CinemaLayoutDTO.builder()
                         .id(perform.getCinemaRoom().getCinemaLayout().getId())
-                        .xIndex(perform.getCinemaRoom().getCinemaLayout().getXIndex())
-                        .yIndex(perform.getCinemaRoom().getCinemaLayout().getYIndex())
+//                        .xIndex(perform.getCinemaRoom().getCinemaLayout().getXIndex())
+//                        .yIndex(perform.getCinemaRoom().getCinemaLayout().getYIndex())
                         .build()
         );
         return performDTO;
@@ -41,7 +40,6 @@ public class PerformMapper {
         typeMap.addMappings(mapper -> {
             mapper.map(PerformDTO::getCinemaRoomDTO, Perform::setCinemaRoom);
             mapper.map(PerformDTO::getFilmDTO, Perform::setFilm);
-            mapper.map(PerformDTO::getViewTypeDTO, Perform::setViewType);
             mapper.map(PerformDTO::getTranslateTypeDTO, Perform::setTranslateType);
         });
         return typeMap.map(performDTO);

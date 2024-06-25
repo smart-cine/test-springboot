@@ -23,11 +23,6 @@ public class CinemaController {
 
     @Autowired
     private CinemaManagerService cinemaManagerService;
-
-    /**
-     *
-     *                   CRUD basic
-     */
     @GetMapping
     public ResponseEntity<?> getAllCinema() {
 
@@ -60,7 +55,6 @@ public class CinemaController {
         return ResponseEntity.ok(dataResponse);
     }
 
-
     @PutMapping
     public ResponseEntity<?> updateCinema(@RequestBody CinemaDTO cinemaDTO) {
 
@@ -81,11 +75,6 @@ public class CinemaController {
         return ResponseEntity.status(HttpStatus.OK).body(dataResponse);
     }
 
-
-    /**
-     *
-     *                       Another
-     */
     @GetMapping("/{id}/managers")
     public ResponseEntity<?> getAllManagerFromCinema(@PathVariable(name = "id") UUID id) {
 

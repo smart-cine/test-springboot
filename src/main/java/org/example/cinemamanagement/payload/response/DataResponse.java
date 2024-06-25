@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataResponse {
+    private boolean success;
     private String message;
     private Object data;
 }

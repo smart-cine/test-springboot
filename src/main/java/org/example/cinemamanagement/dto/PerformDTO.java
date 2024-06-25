@@ -17,8 +17,6 @@ public class PerformDTO {
     private UUID id;
     @JsonProperty("film")
     private FilmDTO filmDTO;
-    @JsonProperty("view_type")
-    private ViewTypeDTO viewTypeDTO;
     @JsonProperty("translate_type")
     private TranslateTypeDTO translateTypeDTO;
     @JsonProperty("cinema_room")

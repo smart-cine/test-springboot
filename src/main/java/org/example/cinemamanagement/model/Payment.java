@@ -34,14 +34,20 @@ public class Payment {
             CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.REFRESH})
-    private Cinema cinema;
+    private Perform perform;
+
 
     @Column(name = "date_create")
     private Date dateCreate;
-    @Column(name = "amount")
-    private Long amount;
-    @OneToMany(mappedBy = "payment", fetch = FetchType.LAZY)
-    private List<SeatPayment> seatPayments;
+
+    @Column(name = "date_expire")
+    private Date dateExpire;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH})
+    private Item item;
 
     @PrePersist
     protected void onCreate() {   // create Date when dateCreate saved in db first time

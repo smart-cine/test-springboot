@@ -12,8 +12,9 @@ import java.sql.Timestamp;
 @Data
 public class ErrorMessage {
     private Timestamp timestamp;
-    @JsonProperty("status_code")
+    @JsonProperty("error_key")
     private int statusCode;
     private String message;
     private Object data;
+    private Boolean success;
 }

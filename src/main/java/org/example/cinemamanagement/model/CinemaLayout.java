@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.cinemamanagement.common.LayoutType;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
@@ -35,11 +36,12 @@ public class CinemaLayout {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Column(name = "x_index")
-    private Integer xIndex;
+    @Column(name = "data")
+    private String data;
 
-    @Column(name = "y_index")
-    private Integer yIndex;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private LayoutType layoutType;
 
     public void addCinema(Cinema cinema) {
         if (this.cinemas == null) {

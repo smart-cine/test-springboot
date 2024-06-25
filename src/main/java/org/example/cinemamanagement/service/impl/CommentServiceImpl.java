@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
         return comments.stream().map(
                 comment -> CommentResponse.builder()
                         .commentId(comment.getId())
-                        .fullName(comment.getUser().getLastName() + " " + comment.getUser().getFirstName())
+//                        .fullName(comment.getUser().getLastName() + " " + comment.getUser().getFirstName())
                         .comment(comment.getBody())
                         .build()
         ).toList();
@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
         return comments.stream()
                 .map(comment -> CommentResponse.builder()
                         .commentId(comment.getId()) // Tra them ve commentId de sua va xoa
-                        .fullName(comment.getUser().getLastName() + " " + comment.getUser().getFirstName())
+//                        .fullName(comment.getUser().getLastName() + " " + comment.getUser().getFirstName())
                         .comment(comment.getBody())
                         .build()
                 ).collect(Collectors.toList());
@@ -93,7 +93,8 @@ public class CommentServiceImpl implements CommentService {
                 .build()
         );
 
-        return "Display: " + user.getLastName() + " " + user.getFirstName() + " / " + film.getTitle() + " / " + addCommentRequest.getBody();
+//        return "Display: " + user.getLastName() + " " + user.getFirstName() + " / " + film.getTitle() + " / " + addCommentRequest.getBody();
+        return null;
     }
 
     @Override

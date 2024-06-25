@@ -1,15 +1,18 @@
 package org.example.cinemamanagement.controller;
 
 import org.example.cinemamanagement.dto.FilmDTO;
+import org.example.cinemamanagement.model.Film;
 import org.example.cinemamanagement.payload.request.AddFilmRequest;
 import org.example.cinemamanagement.payload.response.DataResponse;
 import org.example.cinemamanagement.service.FilmService;
+import org.example.cinemamanagement.utils.CursorBasedPageable;
+import org.example.cinemamanagement.utils.PageResponse;
+import org.example.cinemamanagement.utils.PageSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -24,19 +27,20 @@ public class FilmController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getFilms(@RequestParam Map<String, String> params) {
-        DataResponse dataResponse = new DataResponse();
-        dataResponse.setMessage("Get all films successfully");
-        dataResponse.setData(filmService.getAllFilms(params.get("title")));
+    public ResponseEntity<?> getFilms( CursorBasedPageable cursorBasedPageable) {
+        var specification = new PageSpecification<Film>("title", cursorBasedPageable);
+        PageResponse<List<FilmDTO>> filmPage = filmService.page(specification, cursorBasedPageable);
 
-        return ResponseEntity.ok(dataResponse);
+        return ResponseEntity.ok(filmPage);
     }
 
     @PostMapping
     public ResponseEntity<?> addFilm(@RequestBody AddFilmRequest addFilmRequest) {
+        FilmDTO filmDTO = filmService.addFilm(addFilmRequest);
         DataResponse dataResponse = new DataResponse();
         dataResponse.setMessage("Add film successfully");
-        dataResponse.setData(filmService.addFilm(addFilmRequest));
+        dataResponse.setData(filmDTO);
+        dataResponse.setSuccess(true);
 
         return ResponseEntity.ok(dataResponse);
     }

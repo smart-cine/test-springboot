@@ -41,16 +41,21 @@ public class Film {
     @Column(name = "picture_url")
     private String pictureUrl;
 
-    @Column(name = "traier_url")
+    @Column(name = "trailer_url")
     private String trailerUrl;
 
     @Column(name = "duration")
     private Integer duration;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "language")
+    private String language;
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "film")
     private List<Comment> comments;
-
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
@@ -58,7 +63,7 @@ public class Film {
             CascadeType.DETACH
     }, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "film_tag_relationship",
+            name = "m2m_film_tag",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
@@ -67,9 +72,5 @@ public class Film {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "film")
     private List<Perform> performs;
-
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "film")
-    private List<FilmPrice> filmPrices;
 
 }

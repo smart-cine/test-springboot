@@ -20,7 +20,7 @@ public class Cinema {
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "cinema_layout_and_cinema_relationship",
+    @JoinTable(name = "m2m_cinema_layout",
             joinColumns = @JoinColumn(name = "cinema_id"),
             inverseJoinColumns = @JoinColumn(name = "cinema_layout_id"))
     List<CinemaLayout> cinemaLayouts;
@@ -49,14 +49,6 @@ public class Cinema {
     @Column(name = "name")
     private String name;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "cinema", fetch = FetchType.LAZY, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
-    private List<Payment> payments;
 
     public void addUser(User user) {
         if (this.cinemaManagers == null) {

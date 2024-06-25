@@ -2,6 +2,7 @@ package org.example.cinemamanagement.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.cinemamanagement.common.CommentType;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
@@ -20,7 +21,6 @@ public class Comment {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-
     @ManyToOne(fetch = FetchType.EAGER, cascade =
             {
                     CascadeType.DETACH,
@@ -31,7 +31,6 @@ public class Comment {
     )
     private User user;
 
-
     @ManyToOne(fetch = FetchType.EAGER, cascade =
             {
                     CascadeType.DETACH,
@@ -41,6 +40,11 @@ public class Comment {
             }
     )
     private Film film;
+
+
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private CommentType commentType;
 
     @Column(name = "body")
     private String body;

@@ -98,8 +98,8 @@ public class CinemaRoomServiceImpl implements CinemaRoomService {
             CinemaLayout cinemaLayout = new CinemaLayout();
             cinemaLayout.builder()
                     .id(cinemaRoomDTO.getCinemaLayoutDTO().getId())
-                    .xIndex(cinemaRoomDTO.getCinemaLayoutDTO().getXIndex())
-                    .yIndex(cinemaRoomDTO.getCinemaLayoutDTO().getYIndex())
+//                    .xIndex(cinemaRoomDTO.getCinemaLayoutDTO().getXIndex())
+//                    .yIndex(cinemaRoomDTO.getCinemaLayoutDTO().getYIndex())
                     .build();
             cinemaRoom.setCinemaLayout(cinemaLayout);
         }

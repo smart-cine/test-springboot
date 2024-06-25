@@ -20,9 +20,12 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        userRepository.findUserByEmail(request.getEmail()).ifPresent(user -> {
+            throw new RuntimeException("User with email " + request.getEmail() + " already exists");
+        });
+
         var user = User.builder()
-                .firstName(request.getFirstname())
-                .lastName(request.getLastname())
+                .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)

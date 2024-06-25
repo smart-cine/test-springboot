@@ -18,23 +18,16 @@ public class PerformServiceImpl implements PerformService {
     PerformRepository performRepository;
 
     CinemaRoomRepository cinemaRoomRepository;
-    ViewTypeRepository viewTypeRepository;
-
-    TranslateTypeRepository translateTypeRepository;
 
     FilmRepository filmRepository;
 
     @Autowired
     public PerformServiceImpl(PerformRepository performRepository,
                               CinemaRoomRepository cinemaRoomRepository,
-                              ViewTypeRepository viewTypeRepository,
-                              TranslateTypeRepository translateTypeRepository,
                               FilmRepository filmRepository
     ) {
         this.performRepository = performRepository;
         this.cinemaRoomRepository = cinemaRoomRepository;
-        this.viewTypeRepository = viewTypeRepository;
-        this.translateTypeRepository = translateTypeRepository;
         this.filmRepository = filmRepository;
     }
 
@@ -54,19 +47,6 @@ public class PerformServiceImpl implements PerformService {
         Film film = filmRepository.findById(addPerformRequest.getFilmId())
                 .orElseThrow(() -> new RuntimeException("Film not found"));
 
-        ViewType viewType = viewTypeRepository.findByViewType(addPerformRequest.getViewType()).
-                orElseGet(() -> viewTypeRepository.save(
-                        ViewType.builder()
-                                .viewType(addPerformRequest.getViewType())
-                                .build()
-                ));
-
-        TranslateType translateType = translateTypeRepository.findByTranslateType(addPerformRequest.getTranslateType()).
-                orElseGet(() -> translateTypeRepository.save(
-                        TranslateType.builder()
-                                .translateType(addPerformRequest.getTranslateType())
-                                .build()
-                ));
 
         if(!performRepository.TimeForPerformIsAvailable(
                 cinemaRoom.getId(),
@@ -80,13 +60,12 @@ public class PerformServiceImpl implements PerformService {
                 Perform.builder()
                         .film(film)
                         .cinemaRoom(cinemaRoom)
-                        .viewType(viewType)
-                        .translateType(translateType)
+//                        .viewType(viewType)
+//                        .translateType(translateType)
                         .startTime(addPerformRequest.getStartTime())
                         .endTime(addPerformRequest.getEndTime())
                         .build()
         );
-
 
         return PerformMapper.toDTO(perform);
     }

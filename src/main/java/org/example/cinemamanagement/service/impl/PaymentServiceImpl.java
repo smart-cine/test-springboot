@@ -68,8 +68,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment payment = new Payment();
         payment.setUser(user);
-        payment.setCinema(cinema);
-        payment.setAmount(req.getAmount());
+//        payment.setCinema(cinema);
+//        payment.setAmount(req.getAmount());
         UUID paymentId = paymentRepository.save(payment).getId();
         System.out.print(paymentId);
 

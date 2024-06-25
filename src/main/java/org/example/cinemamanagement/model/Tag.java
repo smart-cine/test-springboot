@@ -32,7 +32,7 @@ public class Tag {
             CascadeType.DETACH
     }, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "film_tag_relationship",
+            name = "m2m_film_tag",
             joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "film_id")
     )

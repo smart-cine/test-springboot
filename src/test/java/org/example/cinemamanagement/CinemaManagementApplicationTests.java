@@ -22,8 +22,6 @@ class CinemaManagementApplicationTests {
                 .film(Film.builder().id(UUID.randomUUID()).
                         title("The Avengers")
                         .build())
-                .viewType(ViewType.builder().id(UUID.randomUUID()).viewType("3D").build())
-                .translateType(TranslateType.builder().id(UUID.randomUUID()).build())
                 .startTime(Timestamp.valueOf(LocalDateTime.now()))
                 .endTime(Timestamp.valueOf(LocalDateTime.now().plusHours(2)))
                 .build();

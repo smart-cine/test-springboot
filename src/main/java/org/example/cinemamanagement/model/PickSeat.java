@@ -35,8 +35,7 @@ public class PickSeat {
     )
     private Perform perform;
 
-    private Integer x;
-
-    private Integer y;
+    @Column(name = "code")
+    private String code;
 
 }

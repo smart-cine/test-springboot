@@ -40,38 +40,42 @@ public class CinemaLayoutServiceImpl implements CinemaLayoutService {
     @Override
     @Transactional
     public CinemaLayoutDTO addCinemaLayout(AddCinemaLayoutRequest cinemaLayoutRequest) {
-        Optional<CinemaLayout> layout = cinemaLayoutRepository.findByXIndexAndYIndex(cinemaLayoutRequest.getXIndex()
-                , cinemaLayoutRequest.getYIndex());
-        if (layout.isPresent()) {
-            throw new RuntimeException("Cinema layout already exists with xIndex: "
-                    + cinemaLayoutRequest.getXIndex() + " and yIndex: " + cinemaLayoutRequest.getYIndex());
-        }
+//        Optional<CinemaLayout> layout = cinemaLayoutRepository.findByXIndexAndYIndex(cinemaLayoutRequest.getXIndex()
+//                , cinemaLayoutRequest.getYIndex());
+//        if (layout.isPresent()) {
+//            throw new RuntimeException("Cinema layout already exists with xIndex: "
+//                    + cinemaLayoutRequest.getXIndex() + " and yIndex: " + cinemaLayoutRequest.getYIndex());
+//        }
+//
+//        CinemaLayout newLayout = new CinemaLayout();
+//        newLayout.setXIndex(cinemaLayoutRequest.getXIndex());
+//        newLayout.setYIndex(cinemaLayoutRequest.getYIndex());
+//        cinemaLayoutRepository.save(newLayout);
+//        return CinemaLayoutMapper.toDTO(newLayout);
+//
 
-        CinemaLayout newLayout = new CinemaLayout();
-        newLayout.setXIndex(cinemaLayoutRequest.getXIndex());
-        newLayout.setYIndex(cinemaLayoutRequest.getYIndex());
-        cinemaLayoutRepository.save(newLayout);
-        return CinemaLayoutMapper.toDTO(newLayout);
-
+        return null;
     }
 
     @Override
     @Transactional
     public CinemaLayoutDTO updateCinemaLayout(UUID idLayout, CinemaLayoutDTO cinemaLayoutDTO) {
-        CinemaLayout layout = cinemaLayoutRepository
-                .findById(idLayout)
-                .orElseThrow(() ->
-                        new RuntimeException("Cinema layout not found with id: " + idLayout));
-        if (cinemaLayoutDTO.getXIndex() != null
-                && !cinemaLayoutDTO.getXIndex().equals(layout.getXIndex()))
-            layout.setXIndex(cinemaLayoutDTO.getXIndex());
+//        CinemaLayout layout = cinemaLayoutRepository
+//                .findById(idLayout)
+//                .orElseThrow(() ->
+//                        new RuntimeException("Cinema layout not found with id: " + idLayout));
+//        if (cinemaLayoutDTO.getXIndex() != null
+//                && !cinemaLayoutDTO.getXIndex().equals(layout.getXIndex()))
+//            layout.setXIndex(cinemaLayoutDTO.getXIndex());
+//
+//        if (cinemaLayoutDTO.getYIndex() != null
+//                && !cinemaLayoutDTO.getYIndex().equals(layout.getYIndex()))
+//            layout.setYIndex(cinemaLayoutDTO.getYIndex());
+//        cinemaLayoutRepository.save(layout);
+//
+//        return CinemaLayoutMapper.toDTO(layout);
 
-        if (cinemaLayoutDTO.getYIndex() != null
-                && !cinemaLayoutDTO.getYIndex().equals(layout.getYIndex()))
-            layout.setYIndex(cinemaLayoutDTO.getYIndex());
-        cinemaLayoutRepository.save(layout);
-
-        return CinemaLayoutMapper.toDTO(layout);
+        return null;
     }
 
     @Override
