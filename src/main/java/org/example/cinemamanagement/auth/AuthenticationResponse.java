@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.cinemamanagement.dto.UserDTO;
 import org.example.cinemamanagement.model.User;
 
 @AllArgsConstructor
@@ -12,5 +13,5 @@ import org.example.cinemamanagement.model.User;
 @NoArgsConstructor
 public class AuthenticationResponse {
     private String token;
-    private User user;
+    private UserDTO user;
 }

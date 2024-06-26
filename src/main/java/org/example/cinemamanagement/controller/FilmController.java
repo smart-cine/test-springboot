@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -30,25 +31,29 @@ public class FilmController {
     public ResponseEntity<?> getFilms( CursorBasedPageable cursorBasedPageable) {
         var specification = new PageSpecification<Film>("title", cursorBasedPageable);
         PageResponse<List<FilmDTO>> filmPage = filmService.page(specification, cursorBasedPageable);
-
         return ResponseEntity.ok(filmPage);
     }
 
     @PostMapping
     public ResponseEntity<?> addFilm(@RequestBody AddFilmRequest addFilmRequest) {
         FilmDTO filmDTO = filmService.addFilm(addFilmRequest);
-        DataResponse dataResponse = new DataResponse();
-        dataResponse.setMessage("Add film successfully");
-        dataResponse.setData(filmDTO);
-        dataResponse.setSuccess(true);
+        DataResponse dataResponse =  DataResponse.builder()
+                .message("Add film successfully")
+                .data(filmDTO)
+                .success(true)
+                .build();
 
         return ResponseEntity.ok(dataResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFilm(@PathVariable UUID id) {
+        DataResponse dataReponse = DataResponse.builder()
+                .message("Delete film successfully")
+                .success(true)
+                .build();
         filmService.deleteFilm(id);
-        return ResponseEntity.ok("Film deleted");
+        return ResponseEntity.ok(dataReponse);
     }
 
     @GetMapping("/{id}")
@@ -56,6 +61,18 @@ public class FilmController {
         DataResponse dataResponse = new DataResponse();
         dataResponse.setMessage("Get film by id successfully");
         dataResponse.setData(filmService.getFilmById(id));
+
+        return ResponseEntity.ok(dataResponse);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateFilm(@PathVariable UUID id, @RequestBody FilmDTO updatedFields) {
+        FilmDTO filmDTO = filmService.updateFilm(id, updatedFields );
+        DataResponse dataResponse = DataResponse.builder()
+                .message("Update film successfully")
+                .data(filmDTO)
+                .success(true)
+                .build();
 
         return ResponseEntity.ok(dataResponse);
     }

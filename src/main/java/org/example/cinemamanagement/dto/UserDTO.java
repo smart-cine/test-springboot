@@ -13,12 +13,7 @@ import java.util.UUID;
 @Setter
 public class UserDTO {
     private UUID id;
-    @JsonProperty("first_name")
-    private String firstName;
-
-    @JsonProperty("last_name")
-    private String lastName;
-
-    @JsonProperty("email")
+    private String name;
     private String email;
+    private String role;
 }

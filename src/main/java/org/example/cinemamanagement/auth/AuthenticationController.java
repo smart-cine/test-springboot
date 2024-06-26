@@ -1,6 +1,7 @@
 package org.example.cinemamanagement.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.example.cinemamanagement.payload.response.DataResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,17 +16,28 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<?> register(
             @RequestBody RegisterRequest request
     ) {
-        System.out.println("request = " + request);
-        return ResponseEntity.ok(service.register(request));
+        AuthenticationResponse authRes =service.register(request);
+        DataResponse response = DataResponse.builder()
+                .message("Register successfully")
+                .success(true)
+                .data(authRes)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(service.authenticate(request));
+        AuthenticationResponse authenRes = service.authenticate(request);
+        DataResponse response = DataResponse.builder()
+                .message("Login successfully")
+                .success(true)
+                .data(authenRes)
+                .build();
+        return ResponseEntity.ok(response);
     }
 }

@@ -25,9 +25,7 @@ public class PageSpecification<T> implements Specification<T> {
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         var predicate = applyPaginationFilter(root, criteriaBuilder);
         query.orderBy(criteriaBuilder.asc(root.get(mainFieldName)));
-
         return predicate;
-
     }
 
     private Predicate applyPaginationFilter(Root<T> root, CriteriaBuilder criteriaBuilder) {

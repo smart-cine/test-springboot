@@ -3,6 +3,7 @@ package org.example.cinemamanagement.auth;
 import lombok.RequiredArgsConstructor;
 import org.example.cinemamanagement.common.Role;
 import org.example.cinemamanagement.configuration.JwtService;
+import org.example.cinemamanagement.mapper.UserMapper;
 import org.example.cinemamanagement.model.User;
 import org.example.cinemamanagement.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,24 +36,29 @@ public class AuthenticationService {
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
-                .user(user)
+                .user(UserMapper.toDTO(user))
                 .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid email or password");
+        }
 
         var user = userRepository.findUserByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
-                .user(user)
+                .user(UserMapper.toDTO(user))
                 .build();
+
     }
 }

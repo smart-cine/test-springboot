@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,38 +71,28 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public FilmDTO updateFilm(FilmDTO filmDTO) {
-//        Film film = filmRepository.findById(filmDTO.getId())
-//                .orElseThrow(() -> new RuntimeException("Film not found"));
-//        if (filmDTO.getTitle() != null)
-//            film.setTitle(filmDTO.getTitle());
-//
-//        if (filmDTO.getDirector() != null)
-//            film.setDirector(filmDTO.getDirector());
-//
-//        if (filmDTO.getCountry() != null)
-//            film.setCountry(filmDTO.getCountry());
-//
-//        if (filmDTO.getRestrictAge() != null)
-//            film.setRestrictAge(filmDTO.getRestrictAge());
-//
-//        if (filmDTO.getReleaseDate() != null)
-//            film.setReleaseDate(filmDTO.getReleaseDate());
-//
-//        if (filmDTO.getTags() != null) {
-//            List<Tag> tags = filmDTO.getTags().stream()
-//                    .map(tagDTO -> Tag.builder()
-//                            .id(tagDTO.getId())
-//                            .name(tagDTO.getName())
-//                            .build()
-//                    )
-//                    .collect(Collectors.toList());
-//            film.setTags(tags);
-//        }
-//        filmRepository.save(film);
-//        return FilmMapper.toDTO(film);
+    public FilmDTO updateFilm(UUID id,FilmDTO updatedFields) {
+        Film film = filmRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Film not found"));
 
-        return null;
+        Map<String, String> updatedFieldsMap = new HashMap<>();
+        Field[] fieldOfUpdatedFields = updatedFields.getClass().getDeclaredFields();
+
+        for(Field field : fieldOfUpdatedFields) {
+            try {
+                    field.setAccessible(true);
+                    String value = (String) field.get(updatedFields);
+                    if(value != null) {
+                        updatedFieldsMap.put(field.getName(), value);
+                    }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Can't access to field");
+            }
+        }
+
+        Film updatedFilm = filmRepository.save(film);
+        return FilmMapper.toDTO(updatedFilm);
+
     }
 
     @Override
@@ -126,14 +117,15 @@ public class FilmServiceImpl implements FilmService {
 //
 //       return new PageResponse<>(filmDTOS, previosCursor, nextCursor);
 
-        var filmSlide  =  filmRepository.findAll(pageSpecification,
+
+        var filmSlide = filmRepository.findAll(pageSpecification,
                 Pageable.ofSize(cursorBasedPageable.getSize()));
 
-        if(!filmSlide.hasContent()) return new PageResponse<>(false, null, null);
+        if (!filmSlide.hasContent()) return new PageResponse<>(false, null, null);
         Map<String, String> pagingMap = new HashMap<>();
 
         List<Film> films = filmSlide.getContent();
-        pagingMap.put("previousPageCursor", cursorBasedPageable.getEncodedCursor(films.get(0).getTitle(),hasPreviousPage(films.get(0))));
+        pagingMap.put("previousPageCursor", cursorBasedPageable.getEncodedCursor(films.get(0).getTitle(), hasPreviousPage(films.get(0))));
         pagingMap.put("nextPageCursor", cursorBasedPageable.getEncodedCursor(films.get(films.size() - 1).getTitle(), filmSlide.hasNext()));
         pagingMap.put("size", String.valueOf(cursorBasedPageable.getSize()));
         pagingMap.put("total", String.valueOf(filmSlide.getTotalElements()));
@@ -141,18 +133,14 @@ public class FilmServiceImpl implements FilmService {
 //        return new PageResponse<>(true ,films.stream().map(FilmMapper::toDTO).collect(Collectors.toList()),
 //                cursorBasedPageable.getEncodedCursor(films.get(0).getTitle(), filmSlide.hasPrevious() ),
 //                cursorBasedPageable.getEncodedCursor(films.get(films.size() - 1).getTitle(), filmSlide.hasNext()));
-        return new PageResponse<>(true ,films.stream()
+        return new PageResponse<>(true, films.stream()
                 .map(FilmMapper::toDTO).collect(Collectors.toList()),
                 pagingMap);
     }
 
     private Boolean hasPreviousPage(Film firstFilm) {
-        CursorBasedPageable tempCursor = CursorBasedPageable.builder()
-                .build();
-
-        tempCursor.setPrevPageCursor(tempCursor.getEncodedCursor(firstFilm.getTitle(), true));
-        var slide = filmRepository.findAll(new PageSpecification<Film>("title", tempCursor), Pageable.ofSize(1));
-        return slide.hasContent();
+        Optional<Film> tempFilm = filmRepository.theFirstFilmBehindCurrFilm(firstFilm.getTitle());
+        return tempFilm.isPresent();
     }
 
     private String buildSQLQuery(Map<String, String> paramsString) {
@@ -161,8 +149,7 @@ public class FilmServiceImpl implements FilmService {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            if(value != null && !value.isEmpty())
-            {
+            if (value != null && !value.isEmpty()) {
                 sqlQuery.append(key).append(" like %").append(value).append("%");
             }
         }
