@@ -9,10 +9,5 @@ public class CinemaMapper {
     public static CinemaDTO toDTO(Cinema cinema) {
         TypeMap<Cinema, CinemaDTO> typeMap = new ModelMapper().createTypeMap(Cinema.class, CinemaDTO.class);
         return typeMap.map(cinema);
-        /*return CinemaDTO.builder()
-                .id(cinema.getId())
-                .variant(cinema.getVariant())
-                .name(cinema.getName())
-                .build();*/
     }
 }

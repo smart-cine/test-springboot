@@ -12,11 +12,16 @@ import org.example.cinemamanagement.repository.CinemaLayoutRepository;
 import org.example.cinemamanagement.repository.CinemaRepository;
 import org.example.cinemamanagement.repository.UserRepository;
 import org.example.cinemamanagement.service.CinemaService;
+import org.example.cinemamanagement.utils.ConvertJsonNameToTypeName;
+import org.example.cinemamanagement.utils.CursorBasedPageable;
+import org.example.cinemamanagement.utils.PageResponse;
+import org.example.cinemamanagement.utils.PageSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +48,6 @@ public class CinemaServiceImpl implements CinemaService {
     public CinemaDTO getCinema(UUID id) {
         Cinema cinema = cinemaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cinema not found with id: " + id));
-
         return CinemaMapper.toDTO(cinema);
     }
 
@@ -61,16 +65,27 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
-    public CinemaDTO updateCinema(CinemaDTO cinemaDTO) {
-        Cinema cinema = cinemaRepository.findById(cinemaDTO.getId())
-                        .orElseThrow(() -> new RuntimeException("Cinema not found with id: " + cinemaDTO.getId()));
+    public CinemaDTO updateCinema(UUID id, Map<String, Object> payload) {
+        Cinema cinema = cinemaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Film not found"));
 
-        cinema.setName(cinemaDTO.getName());
-        cinema.setVariant(cinemaDTO.getVariant());
+        for (Map.Entry<String, Object> entry : payload.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            try {
+                Field field = Cinema.class.getDeclaredField(
+                        ConvertJsonNameToTypeName.convert(key)
+                );
 
-        cinemaRepository.save(cinema);
+                field.setAccessible(true);
+                field.set(cinema, value);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException("Error updating field " + key);
+            }
+        }
+        Cinema updatedCinema = cinemaRepository.save(cinema);
+        return CinemaMapper.toDTO(updatedCinema);
 
-        return CinemaMapper.toDTO(cinema);
     }
 
     @Override
@@ -97,26 +112,6 @@ public class CinemaServiceImpl implements CinemaService {
                 .build();
     }
 
-/*  @Override
-    @Transactional
-    public CinemaLayoutDTO addCinemaLayoutIntoCinema(UUID cinemaID, CinemaLayoutDTO cinemaLayoutDTO) {
-        CinemaLayout cinemaLayout = CinemaLayout.builder()
-                .xIndex(cinemaLayoutDTO.getXIndex())
-                .yIndex(cinemaLayoutDTO.getYIndex())
-                .build();
-        Cinema cinema = cinemaRepository.findById(cinemaID)
-                .orElseThrow(() -> new RuntimeException("Cinema not found with id: " + cinemaID));
-        if (cinemaLayoutRepository.findByXIndexAndYIndex(cinemaLayout.getXIndex(), cinemaLayout.getYIndex()).isPresent())
-                return null;
-
-        cinema.addCinemaLayout(cinemaLayout);
-        return CinemaLayoutDTO.builder()
-                .id(cinemaLayoutRepository.save(cinemaLayout).getId())
-                .xIndex(cinemaLayout.getXIndex())
-                .yIndex(cinemaLayout.getYIndex())
-                .build();
-    }*/
-
 
 
     @Override
@@ -129,14 +124,26 @@ public class CinemaServiceImpl implements CinemaService {
                 .collect(Collectors.toList());
     }
 
-    /*@Override
-    public List<CinemaRoomDTO> getAllCinemaRoomByCinemaId(UUID id) {
-        return null;
+    public PageResponse<List<CinemaDTO>> page(
+            PageSpecification<Cinema> pageSpecification,
+            CursorBasedPageable cursorBasedPageable) {
+
+        var cinemaSlide = cinemaRepository.findAll(pageSpecification,
+                Pageable.ofSize(cursorBasedPageable.getSize()));
+
+        if (!cinemaSlide.hasContent()) return new PageResponse<>(false, null, null);
+        Map<String, String> pagingMap = new HashMap<>();
+
+        List<Cinema> cinemas = cinemaSlide.getContent();
+        pagingMap.put("previousPageCursor", cursorBasedPageable.getEncodedCursor(cinemas.get(0).getName(), cinemaSlide.hasPrevious()));
+        pagingMap.put("nextPageCursor", cursorBasedPageable.getEncodedCursor(cinemas.get(cinemas.size() - 1).getName(), cinemaSlide.hasNext()));
+        pagingMap.put("size", String.valueOf(cursorBasedPageable.getSize()));
+        pagingMap.put("total", String.valueOf(cinemaSlide.getTotalElements()));
+
+        return new PageResponse<>(true, cinemas.stream()
+                .map(CinemaMapper::toDTO).collect(Collectors.toList()),
+                pagingMap);
     }
 
-    @Override
-    public CinemaRoomDTO addCinemaRoom(CinemaRoomDTO cinemaRoomDTO) {
-        return null;
-    }*/
 }
 

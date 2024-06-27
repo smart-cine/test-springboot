@@ -17,7 +17,7 @@ public interface FilmService {
 
     public FilmDTO addFilm(AddFilmRequest addFilmRequest);
 
-    public FilmDTO updateFilm(UUID id, FilmDTO updatedFields);
+    public FilmDTO updateFilm(UUID id, Map<String, Object> updatedFields);
 
     public void deleteFilm(UUID id);
 

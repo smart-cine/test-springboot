@@ -4,9 +4,14 @@ package org.example.cinemamanagement.service;
 import org.example.cinemamanagement.dto.CinemaDTO;
 import org.example.cinemamanagement.dto.CinemaLayoutDTO;
 import org.example.cinemamanagement.dto.CinemaManagerDTO;
+import org.example.cinemamanagement.model.Cinema;
 import org.example.cinemamanagement.payload.request.AddCinemaRequest;
+import org.example.cinemamanagement.utils.CursorBasedPageable;
+import org.example.cinemamanagement.utils.PageResponse;
+import org.example.cinemamanagement.utils.PageSpecification;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface CinemaService {
@@ -18,7 +23,7 @@ public interface CinemaService {
 
     public void deleteCinema(UUID id);
 
-    public CinemaDTO updateCinema(CinemaDTO cinemaDTO);
+    public CinemaDTO updateCinema(UUID id, Map<String, Object> payload);
 
     // public CinemaLayoutDTO addCinemaLayoutIntoCinema(UUID idCinema, CinemaLayoutDTO cinemaLayoutDTO);
 
@@ -27,5 +32,8 @@ public interface CinemaService {
     //  public List<CinemaRoomDTO> getAllCinemaRoomByCinemaId(UUID id);
 
     public CinemaManagerDTO deleteCinemaManagerOutOfCinema(String emailUser, UUID idCinema);
+
+
+    public PageResponse<List<CinemaDTO>> page(PageSpecification<Cinema> pageSpecification, CursorBasedPageable cursorBasedPageable);
 
 }

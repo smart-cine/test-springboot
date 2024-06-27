@@ -61,12 +61,13 @@ public class FilmController {
         DataResponse dataResponse = new DataResponse();
         dataResponse.setMessage("Get film by id successfully");
         dataResponse.setData(filmService.getFilmById(id));
+        dataResponse.setSuccess(true);
 
         return ResponseEntity.ok(dataResponse);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateFilm(@PathVariable UUID id, @RequestBody FilmDTO updatedFields) {
+    public ResponseEntity<?> updateFilm(@PathVariable UUID id, @RequestBody Map<String, Object> updatedFields) {
         FilmDTO filmDTO = filmService.updateFilm(id, updatedFields );
         DataResponse dataResponse = DataResponse.builder()
                 .message("Update film successfully")

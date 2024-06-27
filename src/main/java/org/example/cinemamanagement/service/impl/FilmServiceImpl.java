@@ -8,6 +8,7 @@ import org.example.cinemamanagement.payload.request.AddFilmRequest;
 import org.example.cinemamanagement.repository.FilmRepository;
 import org.example.cinemamanagement.repository.TagRepository;
 import org.example.cinemamanagement.service.FilmService;
+import org.example.cinemamanagement.utils.ConvertJsonNameToTypeName;
 import org.example.cinemamanagement.utils.CursorBasedPageable;
 import org.example.cinemamanagement.utils.PageResponse;
 import org.example.cinemamanagement.utils.PageSpecification;
@@ -71,25 +72,24 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public FilmDTO updateFilm(UUID id,FilmDTO updatedFields) {
+    public FilmDTO updateFilm(UUID id, Map<String, Object> updatedFields) {
         Film film = filmRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Film not found"));
 
-        Map<String, String> updatedFieldsMap = new HashMap<>();
-        Field[] fieldOfUpdatedFields = updatedFields.getClass().getDeclaredFields();
+        for (Map.Entry<String, Object> entry : updatedFields.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
 
-        for(Field field : fieldOfUpdatedFields) {
             try {
-                    field.setAccessible(true);
-                    String value = (String) field.get(updatedFields);
-                    if(value != null) {
-                        updatedFieldsMap.put(field.getName(), value);
-                    }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Can't access to field");
+                Field field = Film.class.getDeclaredField(
+                        ConvertJsonNameToTypeName.convert(key)
+                );
+                field.setAccessible(true);
+                field.set(film, value);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException("Error updating field " + key);
             }
         }
-
         Film updatedFilm = filmRepository.save(film);
         return FilmMapper.toDTO(updatedFilm);
 
@@ -106,18 +106,6 @@ public class FilmServiceImpl implements FilmService {
             PageSpecification<Film> pageSpecification,
             CursorBasedPageable cursorBasedPageable) {
 
-//        String sqlQuery = buildSQLQuery(paramsString);
-//       List <Film> films = filmRepository.findAll(sqlQuery);
-//       List <FilmDTO> filmDTOS = films.stream()
-//               .map(FilmMapper::toDTO)
-//               .collect(Collectors.toList());
-//
-//       String previosCursor = cursorBasedPageable.getPrevPageCursor();
-//       String nextCursor = cursorBasedPageable.getNextPageCursor();
-//
-//       return new PageResponse<>(filmDTOS, previosCursor, nextCursor);
-
-
         var filmSlide = filmRepository.findAll(pageSpecification,
                 Pageable.ofSize(cursorBasedPageable.getSize()));
 
@@ -130,9 +118,6 @@ public class FilmServiceImpl implements FilmService {
         pagingMap.put("size", String.valueOf(cursorBasedPageable.getSize()));
         pagingMap.put("total", String.valueOf(filmSlide.getTotalElements()));
 
-//        return new PageResponse<>(true ,films.stream().map(FilmMapper::toDTO).collect(Collectors.toList()),
-//                cursorBasedPageable.getEncodedCursor(films.get(0).getTitle(), filmSlide.hasPrevious() ),
-//                cursorBasedPageable.getEncodedCursor(films.get(films.size() - 1).getTitle(), filmSlide.hasNext()));
         return new PageResponse<>(true, films.stream()
                 .map(FilmMapper::toDTO).collect(Collectors.toList()),
                 pagingMap);
