@@ -1,0 +1,32 @@
+version: "3"
+services:
+  springboot-app:
+    build:
+      context: . # use the current directory as the build contexts
+      dockerfile: Dockerfile
+    container_name: springboot-app
+    ports:
+      - 9999:9999
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/smartcine
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: visualc++
+      SERVER_PORT: 9999
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: smartcinedinhvl
+      MYSQL_DATABASE: smartcine
+
+    ports:
+      - 3306:3306
+
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/smartcine.initdb.sql:/docker-entrypoint-initdb.d/smartcine.initdb.sql
+
+
