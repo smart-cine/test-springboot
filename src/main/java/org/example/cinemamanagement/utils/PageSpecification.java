@@ -9,23 +9,35 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class PageSpecification<T> implements Specification<T> {
     private final transient String mainFieldName;
     private final transient CursorBasedPageable cursorBasedPageable;
+    private final transient  String searchingTerm;
 
-    public PageSpecification( CursorBasedPageable cursorBasedPageable, String mainFieldName) {
+    public PageSpecification( CursorBasedPageable cursorBasedPageable, String mainFieldName, String searchingTerm ) {
         this.cursorBasedPageable = cursorBasedPageable;
         this.mainFieldName = mainFieldName;
+        this.searchingTerm = searchingTerm;
     }
 
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        var predicate = applyPaginationFilter(root, criteriaBuilder);
+        List<Predicate> predicates = new ArrayList<>();
+
+        // adding sql into criteriaBuilder instance
+        Predicate paginationFilter  = applyPaginationFilter(root, criteriaBuilder);
+        predicates.add(paginationFilter);
+
+        if(searchingTerm != null && !searchingTerm.isEmpty())
+        { Predicate searchTermFilter = criteriaBuilder
+                    .like(root.get(mainFieldName), "%" + searchingTerm + "%");
+            predicates.add(searchTermFilter);
+        }
         query.orderBy(criteriaBuilder.asc(root.get(mainFieldName)));
-        return predicate;
+
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
     private Predicate applyPaginationFilter(Root<T> root, CriteriaBuilder criteriaBuilder) {

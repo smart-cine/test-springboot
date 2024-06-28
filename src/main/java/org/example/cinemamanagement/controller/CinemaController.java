@@ -30,8 +30,8 @@ public class CinemaController {
     private CinemaManagerService cinemaManagerService;
 
     @GetMapping
-    public ResponseEntity<?> getAllCinema(CursorBasedPageable cursorBasedPageable) {
-        var specification = new PageSpecification<Cinema>("name", cursorBasedPageable);
+    public ResponseEntity<?> getAllCinema(CursorBasedPageable cursorBasedPageable, @RequestParam(required = false) String nameCinemaSearching ) {
+        var specification = new PageSpecification<Cinema>("name", cursorBasedPageable, nameCinemaSearching );
         PageResponse<List<CinemaDTO>> cinemaPage = cinemaService.page(specification, cursorBasedPageable);
         return ResponseEntity.ok(cinemaPage);
     }

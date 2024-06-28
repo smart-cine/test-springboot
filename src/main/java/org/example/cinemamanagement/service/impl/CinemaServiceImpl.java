@@ -131,6 +131,8 @@ public class CinemaServiceImpl implements CinemaService {
         var cinemaSlide = cinemaRepository.findAll(pageSpecification,
                 Pageable.ofSize(cursorBasedPageable.getSize()));
 
+
+
         if (!cinemaSlide.hasContent()) return new PageResponse<>(false, null, null);
         Map<String, String> pagingMap = new HashMap<>();
 

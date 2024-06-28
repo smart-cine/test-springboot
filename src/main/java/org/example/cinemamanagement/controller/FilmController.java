@@ -28,8 +28,8 @@ public class FilmController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getFilms( CursorBasedPageable cursorBasedPageable) {
-        var specification = new PageSpecification<Film>("title", cursorBasedPageable);
+    public ResponseEntity<?> getFilms(CursorBasedPageable cursorBasedPageable, @RequestParam(required = false, name = "title") String searchValue) {
+        var specification = new PageSpecification<Film>("title", cursorBasedPageable, searchValue);
         PageResponse<List<FilmDTO>> filmPage = filmService.page(specification, cursorBasedPageable);
         return ResponseEntity.ok(filmPage);
     }
@@ -37,7 +37,7 @@ public class FilmController {
     @PostMapping
     public ResponseEntity<?> addFilm(@RequestBody AddFilmRequest addFilmRequest) {
         FilmDTO filmDTO = filmService.addFilm(addFilmRequest);
-        DataResponse dataResponse =  DataResponse.builder()
+        DataResponse dataResponse = DataResponse.builder()
                 .message("Add film successfully")
                 .data(filmDTO)
                 .success(true)
@@ -68,7 +68,7 @@ public class FilmController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateFilm(@PathVariable UUID id, @RequestBody Map<String, Object> updatedFields) {
-        FilmDTO filmDTO = filmService.updateFilm(id, updatedFields );
+        FilmDTO filmDTO = filmService.updateFilm(id, updatedFields);
         DataResponse dataResponse = DataResponse.builder()
                 .message("Update film successfully")
                 .data(filmDTO)
