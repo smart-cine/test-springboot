@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/layouts")
+@RequestMapping("/api/v1/layout")
 public class CinemaLayoutController {
 
 

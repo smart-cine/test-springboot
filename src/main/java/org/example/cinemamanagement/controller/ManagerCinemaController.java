@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/managers")
+@RequestMapping("/api/v1/manager")
 public class ManagerCinemaController {
     @Autowired
     private CinemaManagerService cinemaManagerService;
