@@ -13,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.util.List;
+
 
 @Configuration
 @EnableWebSecurity
@@ -21,20 +23,9 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
-
-    @Bean
-    public CorsConfiguration corsConfiguration() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.addAllowedHeader("*");
-        return corsConfiguration;
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(request -> corsConfiguration()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/api/v1/user/**").permitAll()
@@ -44,6 +35,15 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
+                .cors(cors -> {
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(List.of("https://example.com")); // Specify your allowed origins
+                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Specify your allowed methods
+                    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With")); // Specify your allowed headers
+                    corsConfiguration.setAllowCredentials(true); // Set to true if your frontend needs to send credentials (cookies, HTTP authentication)
+                    corsConfiguration.addAllowedOriginPattern("*"); // Use this carefully; consider specifying patterns if needed
+                    cors.configurationSource(request -> corsConfiguration);
+                })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
