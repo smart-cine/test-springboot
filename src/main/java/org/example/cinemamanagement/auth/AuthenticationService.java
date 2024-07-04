@@ -6,6 +6,7 @@ import org.example.cinemamanagement.configuration.JwtService;
 import org.example.cinemamanagement.mapper.UserMapper;
 import org.example.cinemamanagement.model.User;
 import org.example.cinemamanagement.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,7 +50,7 @@ public class AuthenticationService {
                     )
             );
         } catch (Exception e) {
-            throw new RuntimeException("Invalid email or password");
+            throw new AuthenticationCredentialsNotFoundException("Invalid email or password");
         }
 
         var user = userRepository.findUserByEmail(request.getEmail()).orElseThrow();

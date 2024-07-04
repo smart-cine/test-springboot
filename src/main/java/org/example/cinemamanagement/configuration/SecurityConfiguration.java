@@ -1,6 +1,5 @@
 package org.example.cinemamanagement.configuration;
 
-
 import lombok.RequiredArgsConstructor;
 import org.example.cinemamanagement.common.Role;
 import org.springframework.context.annotation.Bean;
