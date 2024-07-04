@@ -25,7 +25,7 @@ public class SecurityConfiguration {
         http
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/v1/user/**").permitAll()
                         .requestMatchers("/test/**").permitAll()
                         .requestMatchers("/api/v1/managers/**").hasAuthority(Role.MANAGER_ADMIN.name())
                         .requestMatchers("/api/owner/**").hasAuthority(Role.OWNER.name())
