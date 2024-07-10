@@ -1,11 +1,20 @@
 package org.example.cinemamanagement.controller;
 
+import org.example.cinemamanagement.dto.PerformDTO;
+import org.example.cinemamanagement.model.Perform;
 import org.example.cinemamanagement.payload.request.AddPerformRequest;
 import org.example.cinemamanagement.payload.response.DataResponse;
 import org.example.cinemamanagement.service.PerformService;
+import org.example.cinemamanagement.utils.CursorBasedPageable;
+import org.example.cinemamanagement.utils.PageSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.crypto.Data;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/perform")
@@ -19,23 +28,25 @@ public class PerformController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getPerforms() {
+    public ResponseEntity<?> getPerforms(CursorBasedPageable cursorBasedPageable, @RequestParam(required = false) UUID idSearching) {
+        var specification = new PageSpecification<Perform>("startTime", cursorBasedPageable, String.valueOf(idSearching));
+        return ResponseEntity.ok(performService
+                .getAllPerforms(specification, cursorBasedPageable));
+    }
 
-        DataResponse dataResponse = new DataResponse();
-        dataResponse.setMessage("Get all performs successfully");
-        dataResponse.setData(performService.getAllPerforms());
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPerform(@PathVariable UUID id) {
+        DataResponse dataResponse =  DataResponse.builder()
+                .success(true)
+                .message("Get perform successfully")
+                .data(performService.getPerformById(id))
+                .build();
 
         return ResponseEntity.ok(dataResponse);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getPerform() {
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping
-    public ResponseEntity<?> addPerform(@RequestBody AddPerformRequest addPerformRequest)
-    {
+    public ResponseEntity<?> addPerform(@RequestBody AddPerformRequest addPerformRequest) {
         DataResponse dataResponse = new DataResponse();
         dataResponse.setMessage("Add perform successfully");
         dataResponse.setData(performService.addPerform(addPerformRequest));
@@ -43,13 +54,24 @@ public class PerformController {
         return ResponseEntity.ok(dataResponse);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updatePerform() {
-        return ResponseEntity.ok().build();
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updatePerform(@PathVariable UUID id, @RequestBody Map<String, Object> payload) {
+        DataResponse dataResponse =  DataResponse.builder()
+                .success(true)
+                .data(performService.updatePerform(id, payload))
+                .message("Update perform successfully")
+                .build();
+
+        return ResponseEntity.ok(dataResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?>deletePerform() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> deletePerform() {
+        DataResponse dataResponse = DataResponse.builder()
+                .success(true)
+                .message("Delete perform successfully")
+                .build();
+
+        return ResponseEntity.ok(dataResponse);
     }
 }

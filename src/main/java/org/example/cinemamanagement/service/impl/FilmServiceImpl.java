@@ -109,14 +109,18 @@ public class FilmServiceImpl implements FilmService {
         var filmSlide = filmRepository.findAll(pageSpecification,
                 Pageable.ofSize(cursorBasedPageable.getSize()));
 
-        if (!filmSlide.hasContent()) return new PageResponse<>(false, null, null);
-        Map<String, String> pagingMap = new HashMap<>();
+        Map<String, Object> pagingMap = new HashMap<>();
+
+        pagingMap.put("previousPageCursor", null);
+        pagingMap.put("nextPageCursor", null);
+        pagingMap.put("size", cursorBasedPageable.getSize());
+        pagingMap.put("total", filmSlide.getTotalElements());
+
+        if (!filmSlide.hasContent()) return new PageResponse<>(false, List.of(), pagingMap );
 
         List<Film> films = filmSlide.getContent();
         pagingMap.put("previousPageCursor", cursorBasedPageable.getEncodedCursor(films.get(0).getTitle(), hasPreviousPage(films.get(0))));
         pagingMap.put("nextPageCursor", cursorBasedPageable.getEncodedCursor(films.get(films.size() - 1).getTitle(), filmSlide.hasNext()));
-        pagingMap.put("size", String.valueOf(cursorBasedPageable.getSize()));
-        pagingMap.put("total", String.valueOf(filmSlide.getTotalElements()));
 
         return new PageResponse<>(true, films.stream()
                 .map(FilmMapper::toDTO).collect(Collectors.toList()),

@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.substringBetween;
 @Builder
 @AllArgsConstructor
 public class CursorBasedPageable {
-    private int size = 5;
+    private Integer size = 5;
     private String nextPageCursor;
     private  String prevPageCursor;
 
@@ -57,5 +57,4 @@ public class CursorBasedPageable {
                 ? getDecodedCursor(prevPageCursor)
                 : getDecodedCursor(nextPageCursor);
     }
-
 }
