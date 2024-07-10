@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## About Application
 Project is Cinema Management. The main feature is ordering seat feature with realtime. And System structure of its is micro-service( all services refer to one database). My team use Java just for API. And will use Nodejs for runtime.
 
@@ -19,11 +18,5 @@ LINK: https://dbdiagram.io/d/Trat-DJien-ITMC-Solution-65bf2fc6ac844320ae6458be
 ## Structure of Application
 ![image](https://github.com/realtime-cinema/CinemaManagement/assets/90248665/e361de87-dad8-4714-8981-593d135c5969)
 
-## Postman API 
-https://api.postman.com/collections/34158645-eec5e262-7214-47e1-8891-3fe81f196a56?access_key=PMAT-01HZCPDQBFWXGNDA5FVW8AHGFR
-
 ## Progress
 In progress 
-=======
-# smartcine-be
->>>>>>> Initial commit
