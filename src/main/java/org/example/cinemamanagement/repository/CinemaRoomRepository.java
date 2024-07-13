@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ public interface CinemaRoomRepository extends JpaRepository<CinemaRoom, UUID>, J
     Optional<CinemaRoom> findByName(String name);
     @Query("select c_r from CinemaRoom c_r where c_r.name = ?1 and c_r.cinema.id = ?2")
     Optional<CinemaRoom> findByNameAndCinemaId(String name, UUID cinemaId);
+    List<CinemaRoom> findAllByCinemaId(UUID cinemaId);
 }
 
 

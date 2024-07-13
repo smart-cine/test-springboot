@@ -20,9 +20,9 @@ public class CinemaRoomController {
     CinemaRoomService cinemaRoomService;
 
     @GetMapping
-    public ResponseEntity<?> getAllRoom(CursorBasedPageable cursorBasedPageable,
-                                        @RequestParam(required = false, name = "name") String searchValue) {
-        var specification = new PageSpecification<CinemaRoom>("name", cursorBasedPageable, searchValue);
+    public ResponseEntity<?> getAllRooms(CursorBasedPageable cursorBasedPageable,
+                                        @RequestParam(required = false, name = "cinema-id") UUID searchValue) {
+        var specification = new PageSpecification<CinemaRoom>("cinema", cursorBasedPageable, searchValue);
 
         return ResponseEntity.ok(
                 cinemaRoomService.getAllCinemaRooms(cursorBasedPageable, specification)
@@ -40,7 +40,6 @@ public class CinemaRoomController {
 
         return ResponseEntity.ok(dataResponse);
     }
-
 
     @PostMapping
     public ResponseEntity<?> addRoom(@RequestBody AddOrUpdateCinemaRoom addOrUpdateCinemaRoom) {

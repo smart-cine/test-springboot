@@ -27,7 +27,7 @@ public class PerformController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getPerforms(CursorBasedPageable cursorBasedPageable, @RequestParam(required = false, name = "start-time") String startTime) {
+    public ResponseEntity<?> getPerforms(CursorBasedPageable cursorBasedPageable, @RequestParam(required = false, name = "start-time") Timestamp startTime) {
         var specification = new PageSpecification<Perform>("startTime",
                 cursorBasedPageable, startTime );
         return ResponseEntity.ok(performService

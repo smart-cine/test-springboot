@@ -45,6 +45,7 @@ public class CinemaRoomServiceImpl implements CinemaRoomService {
         var cinemaRoomSlide  = cinemaRoomRepository.findAll(specification,
                 Pageable.ofSize(cursorBasedPageable.getSize()));
 
+
         Map<String, Object> pagingMap = new HashMap<>();
 
         pagingMap.put("previousPageCursor", null);
