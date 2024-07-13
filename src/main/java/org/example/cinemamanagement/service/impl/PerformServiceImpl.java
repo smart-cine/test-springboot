@@ -1,9 +1,6 @@
 package org.example.cinemamanagement.service.impl;
 
-import org.example.cinemamanagement.common.TranslateType;
-import org.example.cinemamanagement.common.ViewType;
 import org.example.cinemamanagement.dto.PerformDTO;
-import org.example.cinemamanagement.mapper.CinemaMapper;
 import org.example.cinemamanagement.mapper.PerformMapper;
 import org.example.cinemamanagement.model.*;
 import org.example.cinemamanagement.payload.request.AddPerformRequest;
@@ -61,14 +58,14 @@ public class PerformServiceImpl implements PerformService {
         }
 
         List<Perform> performs = performSlide.getContent();
-        pagingMap.put("previousPageCursor", cursorBasedPageable.getEncodedCursor(String.valueOf(performs.get(0).getId()), performSlide.hasPrevious()));
-        pagingMap.put("nextPageCursor", cursorBasedPageable.getEncodedCursor(String.valueOf(performs.get(performs.size() - 1).getId()), performSlide.hasNext()));
+        pagingMap.put("previousPageCursor", cursorBasedPageable.getEncodedCursor(performs.get(0).getStartTime(), performSlide.hasPrevious()));
+        pagingMap.put("nextPageCursor", cursorBasedPageable.getEncodedCursor(performs.get(performs.size() - 1).getStartTime(), performSlide.hasNext()));
 
 
-        return new PageResponse<>(performSlide.hasContent(),
-                performs.stream()
-                        .map(PerformMapper::toDTO).toList(),
-                pagingMap);
+        return new PageResponse<>(true, performs.stream()
+                .map(PerformMapper::toDTO)
+                .collect(Collectors.toList()), pagingMap);
+
 
     }
 
@@ -90,15 +87,15 @@ public class PerformServiceImpl implements PerformService {
                 .orElseThrow(() -> new RuntimeException("Film not found"));
 
 
-
         Perform perform = performRepository.save(
                 Perform.builder()
                         .film(film)
                         .cinemaRoom(cinemaRoom)
-                        .viewType(ViewType.valueOf(addPerformRequest.getViewType()))
-                        .translateType(TranslateType.valueOf(addPerformRequest.getTranslateType()))
+                        .viewType(addPerformRequest.getViewType())
+                        .translateType(addPerformRequest.getTranslateType())
                         .startTime(addPerformRequest.getStartTime())
                         .endTime(addPerformRequest.getEndTime())
+                        .price(addPerformRequest.getPrice())
                         .build()
         );
 

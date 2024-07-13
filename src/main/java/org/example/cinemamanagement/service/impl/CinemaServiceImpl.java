@@ -57,6 +57,11 @@ public class CinemaServiceImpl implements CinemaService {
     // check
     @Override
     public CinemaDTO addCinema(AddCinemaRequest addCinemaRequest) {
+        if(cinemaRepository.existsByName(addCinemaRequest.getName()))
+        {
+            throw new RuntimeException("Cinema already exists");
+        }
+
         Cinema cinema = Cinema.builder()
                 .name(addCinemaRequest.getName())
                 .variant(addCinemaRequest.getVariant())

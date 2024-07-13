@@ -15,4 +15,5 @@ public class CinemaDTO {
     private UUID id;
     private String variant;
     private String name;
+    private  String address;
 }

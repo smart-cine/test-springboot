@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Base64;
 
@@ -31,7 +32,7 @@ public class CursorBasedPageable {
         return hasPrevPageCursor() || hasNextPageCursor();
     }
 
-    public String getDecodedCursor(String cursorValue) {
+    public Object getDecodedCursor(String cursorValue) {
         if (cursorValue == null || cursorValue.isEmpty()) {
             throw new IllegalArgumentException("Cursor value is not valid!");
         }
@@ -41,7 +42,7 @@ public class CursorBasedPageable {
         return substringBetween(decodedValue, "###");
     }
 
-    public String getEncodedCursor(String field, boolean hasPrevOrNextElements) {
+    public String getEncodedCursor(Object field, boolean hasPrevOrNextElements) {
         requireNonNull(field);
 
         if (!hasPrevOrNextElements) return null;
@@ -50,8 +51,8 @@ public class CursorBasedPageable {
         return Base64.getEncoder().encodeToString(structuredValue.getBytes());
     }
 
-    public String getSearchValue() {
-        if (!hasCursors()) return "";
+    public Object getSearchValue() {
+        if (!hasCursors()) return null;
 
         return hasPrevPageCursor()
                 ? getDecodedCursor(prevPageCursor)

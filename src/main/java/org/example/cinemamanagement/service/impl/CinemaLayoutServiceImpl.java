@@ -62,11 +62,12 @@ public class CinemaLayoutServiceImpl implements CinemaLayoutService {
         for (Field field : fields) {
             field.setAccessible(true);
             try {
-                Object value = field.get(cinemaLayoutDTO);
-                if (value != null) {
-                    field.set(layout, value);
+                if (field.get(cinemaLayoutDTO) != null) {
+                    Field fieldInLayout = layout.getClass().getDeclaredField(field.getName());
+                    fieldInLayout.setAccessible(true);
+                    fieldInLayout.set(layout, field.get(cinemaLayoutDTO));
                 }
-            } catch (IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }

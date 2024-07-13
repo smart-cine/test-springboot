@@ -12,10 +12,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/layout")
+@RequestMapping("/api/v1/cinema-layout")
 public class CinemaLayoutController {
-
-
     CinemaLayoutService cinemaLayoutService;
 
     @Autowired
@@ -29,6 +27,18 @@ public class CinemaLayoutController {
                 .builder()
                 .data(cinemaLayoutService.getAllCinemaLayout())
                 .message("Get all layout successfully")
+                .success(true)
+                .build();
+
+        return ResponseEntity.ok(dataResponse);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getLayout(@PathVariable UUID id) {
+        DataResponse dataResponse = DataResponse
+                .builder()
+                .data(cinemaLayoutService.getCinemaLayout(id))
+                .message("Get layout by id successfully")
                 .success(true)
                 .build();
 

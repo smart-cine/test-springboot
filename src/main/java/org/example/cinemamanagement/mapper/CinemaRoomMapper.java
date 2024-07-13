@@ -7,12 +7,14 @@ import org.modelmapper.TypeMap;
 
 public class CinemaRoomMapper {
     public static CinemaRoomDTO toDTO(CinemaRoom cinemaRoom) {
-        TypeMap<CinemaRoom, CinemaRoomDTO> typeMap = new ModelMapper().createTypeMap(CinemaRoom.class, CinemaRoomDTO.class);
-        CinemaRoomDTO cinemaRoomDTO = typeMap.map(cinemaRoom);
-        cinemaRoomDTO.setCinemaDTO(CinemaMapper.toDTO(cinemaRoom.getCinema()));
-        cinemaRoomDTO.setCinemaLayoutDTO(CinemaLayoutMapper.toDTO(cinemaRoom.getCinemaLayout()));
 
-        return cinemaRoomDTO;
+        return CinemaRoomDTO.builder()
+                .cinemaId(cinemaRoom.getCinema().getId())
+                .cinemaLayoutId(cinemaRoom.getCinemaLayout().getId())
+                .id(cinemaRoom.getId())
+                .name(cinemaRoom.getName())
+                .roomType(cinemaRoom.getRoomType().name())
+                .build();
     }
 
     public static CinemaRoom toEntity(CinemaRoomDTO cinemaRoomDTO) {

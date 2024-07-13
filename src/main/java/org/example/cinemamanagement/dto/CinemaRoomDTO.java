@@ -14,11 +14,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CinemaRoomDTO {
     private UUID id;
-    @JsonProperty("cinema")
-    private CinemaDTO cinemaDTO;
-    @JsonProperty("cinema_layout")
-    private CinemaLayoutDTO cinemaLayoutDTO;
+    @JsonProperty("cinema_id")
+    private UUID cinemaId;
+    @JsonProperty("cinema_layout_id")
+    private UUID cinemaLayoutId;
     private String name;
+
+    @JsonProperty("room_type")
+    private String roomType;
 }
 
 

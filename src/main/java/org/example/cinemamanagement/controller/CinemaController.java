@@ -52,6 +52,7 @@ public class CinemaController {
     public ResponseEntity<?> addCinema(@RequestBody AddCinemaRequest addCinemaRequest) {
 
         DataResponse dataResponse = DataResponse.builder()
+                .success(true)
                 .message("Add cinema successfully")
                 .data(cinemaService.addCinema(addCinemaRequest))
                 .build();

@@ -14,6 +14,7 @@ And myteam's solution is: if a person who pick before, that this seat will lock 
 
 ## The database desgin 
 LINK: https://dbdiagram.io/d/Trat-DJien-ITMC-Solution-65bf2fc6ac844320ae6458be
+
 ![image](https://github.com/realtime-cinema/CinemaManagement/assets/90248665/741cacde-2ff3-4207-885c-cf391ec005e5)
 ## Structure of Application
 ![image](https://github.com/realtime-cinema/CinemaManagement/assets/90248665/e361de87-dad8-4714-8981-593d135c5969)

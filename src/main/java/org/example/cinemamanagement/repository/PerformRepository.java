@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface PerformRepository extends JpaRepository<Perform, UUID>, JpaSpecificationExecutor<Perform> {
 
-    @Query("SELECT p FROM Perform p WHERE p.cinemaRoom.id = :cinemaRoomId AND p.startTime <= :startTime AND (p.endTime >= :startTime OR p.startTime <= :endTime AND p.endTime >= :endTime) OR (p.startTime <= :endTime AND p.endTime >= :endTime)")
-    List<Perform> TimeForPerformIsAvailable(UUID cinemaRoomId, Timestamp startTime, Timestamp endTime);
+    @Query("SELECT p FROM Perform p WHERE p.startTime >= ?1")
+    List<Perform> findAllByStartTime(Timestamp startTime);
 
 }
