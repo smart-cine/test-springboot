@@ -1,6 +1,5 @@
 package org.example.cinemamanagement.service.impl;
 
-import org.example.cinemamanagement.CinemaManagementApplication;
 import org.example.cinemamanagement.dto.CinemaDTO;
 import org.example.cinemamanagement.dto.CinemaLayoutDTO;
 import org.example.cinemamanagement.dto.CinemaManagerDTO;
@@ -36,8 +35,6 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Autowired
     CinemaLayoutRepository cinemaLayoutRepository;
-    @Autowired
-    private CinemaManagementApplication cinemaManagementApplication;
 
     @Override
     public List<CinemaDTO> getAllCinema() {
@@ -57,11 +54,6 @@ public class CinemaServiceImpl implements CinemaService {
     // check
     @Override
     public CinemaDTO addCinema(AddCinemaRequest addCinemaRequest) {
-        if(cinemaRepository.existsByName(addCinemaRequest.getName()))
-        {
-            throw new RuntimeException("Cinema already exists");
-        }
-
         Cinema cinema = Cinema.builder()
                 .name(addCinemaRequest.getName())
                 .variant(addCinemaRequest.getVariant())
@@ -121,6 +113,7 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
 
+
     @Override
     public List<CinemaLayoutDTO> getCinemaLayoutByCinemaId(UUID id) {
         Cinema cinema = cinemaRepository.findById(id)
@@ -138,19 +131,18 @@ public class CinemaServiceImpl implements CinemaService {
         var cinemaSlide = cinemaRepository.findAll(pageSpecification,
                 Pageable.ofSize(cursorBasedPageable.getSize()));
 
-        Map<String, Object> pagingMap = new HashMap<>();
-        pagingMap.put("previousPageCursor", null);
-        pagingMap.put("nextPageCursor", null);
-        pagingMap.put("size", cursorBasedPageable.getSize());
-        pagingMap.put("total", cinemaSlide.getTotalElements());
 
-        if(!cinemaSlide.hasContent()) return new PageResponse<>(false, List.of(), pagingMap);
+
+        if (!cinemaSlide.hasContent()) return new PageResponse<>(false, null, null);
+        Map<String, String> pagingMap = new HashMap<>();
 
         List<Cinema> cinemas = cinemaSlide.getContent();
         pagingMap.put("previousPageCursor", cursorBasedPageable.getEncodedCursor(cinemas.get(0).getName(), cinemaSlide.hasPrevious()));
         pagingMap.put("nextPageCursor", cursorBasedPageable.getEncodedCursor(cinemas.get(cinemas.size() - 1).getName(), cinemaSlide.hasNext()));
+        pagingMap.put("size", String.valueOf(cursorBasedPageable.getSize()));
+        pagingMap.put("total", String.valueOf(cinemaSlide.getTotalElements()));
 
-        return new PageResponse<>(cinemaSlide.hasContent(), cinemas.stream()
+        return new PageResponse<>(true, cinemas.stream()
                 .map(CinemaMapper::toDTO).collect(Collectors.toList()),
                 pagingMap);
     }

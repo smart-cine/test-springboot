@@ -47,8 +47,6 @@ public class Perform {
                     CascadeType.PERSIST,
                     CascadeType.REFRESH}
     )
-    //define column id
-    @JoinColumn(name = "dest_id")
     private CinemaRoom cinemaRoom;
 
     @JsonIgnore

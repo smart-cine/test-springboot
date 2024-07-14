@@ -15,19 +15,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PerformDTO {
     private UUID id;
-    @JsonProperty("film_id")
-    private UUID filmId;
+    @JsonProperty("film")
+    private FilmDTO filmDTO;
     @JsonProperty("translate_type")
-    private String translateType;
-    @JsonProperty("view_type")
-    private String viewType;
-
-    @JsonProperty("cinema_room_id")
-    private UUID cinemaRoomId;
+    private TranslateTypeDTO translateTypeDTO;
+    @JsonProperty("cinema_room")
+    private CinemaRoomDTO cinemaRoomDTO;
     @JsonProperty("start_time")
     private Timestamp startTime;
     @JsonProperty("end_time")
     private Timestamp endTime;
-
-    private Double price;
 }

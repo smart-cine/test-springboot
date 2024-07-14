@@ -21,8 +21,9 @@ public class CinemaRoomController {
 
     @GetMapping
     public ResponseEntity<?> getAllRooms(CursorBasedPageable cursorBasedPageable,
-                                        @RequestParam(required = false, name = "cinema-id") UUID searchValue) {
-        var specification = new PageSpecification<CinemaRoom>("cinema", cursorBasedPageable, searchValue);
+                                         @RequestParam(required = false, name = "cinema-id") UUID cinemaId) {
+        var specification = new PageSpecification<CinemaRoom>
+                ("name", "cinema", cinemaId, cursorBasedPageable);
 
         return ResponseEntity.ok(
                 cinemaRoomService.getAllCinemaRooms(cursorBasedPageable, specification)

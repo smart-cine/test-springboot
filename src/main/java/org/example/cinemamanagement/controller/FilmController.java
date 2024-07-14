@@ -29,7 +29,7 @@ public class FilmController {
 
     @GetMapping
     public ResponseEntity<?> getFilms(CursorBasedPageable cursorBasedPageable, @RequestParam(required = false, name = "title") String searchValue) {
-        var specification = new PageSpecification<Film>("title", cursorBasedPageable, searchValue);
+        var specification = new PageSpecification<Film>("title", "", searchValue, cursorBasedPageable);
         PageResponse<List<FilmDTO>> filmPage = filmService.page(specification, cursorBasedPageable);
         return ResponseEntity.ok(filmPage);
     }

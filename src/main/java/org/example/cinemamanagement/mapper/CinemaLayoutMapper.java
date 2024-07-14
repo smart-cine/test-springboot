@@ -7,10 +7,8 @@ import org.modelmapper.TypeMap;
 
 public class CinemaLayoutMapper {
     public static CinemaLayoutDTO toDTO(CinemaLayout cinemaLayout) {
-        return CinemaLayoutDTO.builder()
-                .layoutType(cinemaLayout.getLayoutType())
-                .data(cinemaLayout.getData())
-                .id(cinemaLayout.getId())
-                .build();
+        TypeMap<CinemaLayout, CinemaLayoutDTO> typeMap = new ModelMapper().createTypeMap(CinemaLayout.class, CinemaLayoutDTO.class);
+        return typeMap.map(cinemaLayout);
     }
+
 }

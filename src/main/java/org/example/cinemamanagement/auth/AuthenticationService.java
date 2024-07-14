@@ -50,7 +50,7 @@ public class AuthenticationService {
                     )
             );
         } catch (Exception e) {
-            throw new AuthenticationCredentialsNotFoundException("Invalid email or password");
+            throw new AuthenticationCredentialsNotFoundException("Invalid email or password.");
         }
 
         var user = userRepository.findUserByEmail(request.getEmail()).orElseThrow();

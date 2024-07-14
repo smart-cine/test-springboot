@@ -31,7 +31,7 @@ public class CinemaController {
 
     @GetMapping
     public ResponseEntity<?> getAllCinema(CursorBasedPageable cursorBasedPageable, @RequestParam(required = false) String nameCinemaSearching ) {
-        var specification = new PageSpecification<Cinema>("name", cursorBasedPageable, nameCinemaSearching );
+        var specification = new PageSpecification<Cinema>("name", "",  nameCinemaSearching, cursorBasedPageable );
         PageResponse<List<CinemaDTO>> cinemaPage = cinemaService.page(specification, cursorBasedPageable);
         return ResponseEntity.ok(cinemaPage);
     }
@@ -52,7 +52,6 @@ public class CinemaController {
     public ResponseEntity<?> addCinema(@RequestBody AddCinemaRequest addCinemaRequest) {
 
         DataResponse dataResponse = DataResponse.builder()
-                .success(true)
                 .message("Add cinema successfully")
                 .data(cinemaService.addCinema(addCinemaRequest))
                 .build();

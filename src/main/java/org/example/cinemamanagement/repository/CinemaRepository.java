@@ -11,6 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface CinemaRepository extends JpaRepository<Cinema, UUID>, JpaSpecificationExecutor<Cinema> {
-    public Boolean existsByName(String name);
     public Optional<Cinema> findById(UUID id);
 }
