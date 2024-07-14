@@ -77,6 +77,7 @@ public class PerformServiceImpl implements PerformService {
         return PerformMapper.toDTO(perform);
     }
 
+
     @Override
     @Transactional
     public PerformDTO addPerform(AddPerformRequest addPerformRequest) {
@@ -107,8 +108,7 @@ public class PerformServiceImpl implements PerformService {
         Perform perform = performRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Perform not found with id: " + id));
 
-        for(Map.Entry<String, Object> dataSet : payload.entrySet())
-        {
+        for (Map.Entry<String, Object> dataSet : payload.entrySet()) {
             String key = dataSet.getKey();
             Object value = dataSet.getValue();
 
